@@ -9,7 +9,7 @@
   #?(:clj
      (:import (java.util Date TimeZone UUID)
               (java.net URI)
-              (java.time LocalDate LocalDateTime ZoneId)
+              (java.time ZonedDateTime LocalDate LocalDateTime ZoneId)
               (java.time.format DateTimeFormatter))))
 
 (declare coerce)
@@ -87,7 +87,8 @@
 #?(:clj
    (defn- flexible-parse-inst [x]
      (try
-       (clojure.instant/read-instant-timestamp x)
+       (Date/from (.toInstant (ZonedDateTime/parse x)))
+
        (catch Exception _
          (let [zone (ZoneId/of (.getID (TimeZone/getDefault)))]
            (or (some #(try
